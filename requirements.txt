@@ -1,0 +1,8 @@
+1. Webpack
+    1.1 Babel
+    1.2 Scss
+    1.3 Eslint
+    1.4 2-Modes
+        1.4.1 Dev
+        1.4.2 Prod
+2. Git
