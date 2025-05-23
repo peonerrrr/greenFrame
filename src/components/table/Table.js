@@ -2,6 +2,15 @@ import {ExcelComponent} from '@core/ExcelComponent';
 
 export class Table extends ExcelComponent {
   static className = 'excel__table'
+
+  constructor($root, options) {
+    super($root, {
+      name: 'Table',
+      listeners: [],
+      ...options
+    })
+  }
+
   toHTML() {
     return `<div class="row">
 

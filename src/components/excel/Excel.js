@@ -3,23 +3,44 @@ import {$} from '@core/dom'
 
 export class Excel {
   constructor(selector, options) {
-    this.$el = document.querySelector(selector)
-    this.components = options.components || []
+    this.$el = $(selector) // Use $ utility
+    this.componentClasses = options.components || []
+    this.emitter = options.emitter
+    this.components = [] // To store component instances
   }
 
   getRoot() {
     const $root = $.create('div', 'excel')
-    this.components.forEach(Component => {
-      const $elem = $.create('div', Component.className)
-      const component = new Component($elem)
-      $elem.html(component.toHTML())
-      // afterbegin, afterend, beforeend, beforebegin
-      $root.append($elem)
+    // Clear previous instances if any, and prepare for new ones
+    this.components = [] 
+    
+    this.componentClasses.forEach(ComponentClass => {
+      const $el = $.create('div', ComponentClass.className)
+      const component = new ComponentClass($el, {emitter: this.emitter})
+      
+      $el.html(component.toHTML())
+      $root.append($el)
+      
+      // Initialize the component after its DOM is ready and appended
+      component.init() 
+      
+      // Store the initialized component instance
+      this.components.push(component)
     })
+
     return $root
   }
 
   render() {
-    this.$el.append(this.getRoot().$el)
+    // getRoot now also initializes components
+    this.$el.append(this.getRoot().$el) 
+  }
+
+  destroy() {
+    this.components.forEach(component => component.destroy())
+    // Optionally, clear this.components if Excel instance can be re-rendered
+    // this.components = []
+    // Optionally, clear the $el content
+    // this.$el.clear()
   }
 }
